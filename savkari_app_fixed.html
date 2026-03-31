@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>सावकारी कर्ज व्यवस्थापन</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans Devanagari',sans-serif;background:linear-gradient(135deg,#fdf6ec,#f5e6cc);min-height:100vh;}
+.hdr{background:linear-gradient(90deg,#7a3b1e,#b5541a);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.hdr h1{font-size:16px;font-weight:700;}.hdr p{font-size:11px;opacity:.85;margin-top:2px;}
+.bn{background:#fff;color:#7a3b1e;border:none;border-radius:8px;padding:9px 14px;font-weight:700;cursor:pointer;font-size:14px;font-family:inherit;}
+.pg{display:none;padding:16px;max-width:800px;margin:0 auto;}.pg.on{display:block;}
+.sb{width:100%;padding:11px 14px;border:1.5px solid #c8a97e;border-radius:10px;font-size:15px;font-family:inherit;background:#fffdf8;outline:none;margin-bottom:14px;}
+.card{background:#fff;border:1.5px solid #e0c49b;border-radius:12px;padding:14px;margin-bottom:12px;}
+.cn{font-weight:700;font-size:16px;color:#5c2a0e;margin-bottom:6px;}
+.cm{font-size:13px;color:#888;display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;}
+.cbs{display:flex;flex-wrap:wrap;gap:8px;}
+.cb{border-radius:7px;padding:7px 13px;font-weight:600;cursor:pointer;font-size:13px;font-family:inherit;border:1.5px solid;}
+.emp{text-align:center;padding:60px 20px;color:#a87850;font-size:15px;}
+.fhdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.bk{background:none;border:none;font-size:26px;cursor:pointer;color:#5c2a0e;}
+.fttl{font-size:17px;font-weight:700;color:#5c2a0e;}
+.tabs{display:flex;overflow-x:auto;gap:6px;margin-bottom:16px;padding-bottom:2px;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;padding:8px 14px;border-radius:20px;border:1.5px solid #c8a97e;background:#fff;color:#7a3b1e;font-weight:600;font-size:13px;font-family:inherit;cursor:pointer;}
+.tab.on{background:#7a3b1e;color:#fff;border-color:#7a3b1e;}
+.tc{display:none;}.tc.on{display:block;}
+.sec{background:#fff8f0;border:1px solid #e0c49b;border-radius:10px;padding:14px;margin-bottom:14px;}
+.stt{font-weight:700;color:#7a3b1e;font-size:15px;margin-bottom:12px;border-bottom:2px solid #e0c49b;padding-bottom:6px;}
+.ptt{text-align:center;color:#7a3b1e;font-size:16px;font-weight:700;margin-bottom:12px;padding:10px;background:#fff3e8;border-radius:8px;border:1px solid #e0c49b;}
+.fld{margin-bottom:12px;}.fld label{display:block;font-size:13px;color:#6b4226;font-weight:600;margin-bottom:5px;}
+.fld input,.fld textarea{width:100%;padding:10px 12px;border:1.5px solid #c8a97e;border-radius:8px;font-size:15px;font-family:inherit;background:#fffdf8;outline:none;}
+.fld input:focus,.fld textarea:focus{border-color:#7a3b1e;}
+.fld textarea{resize:vertical;min-height:70px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.nav{display:flex;gap:10px;margin-top:10px;}
+.nav button{flex:1;padding:11px;border-radius:8px;border:1.5px solid #c8a97e;background:#fff;color:#7a3b1e;font-weight:600;font-size:14px;font-family:inherit;cursor:pointer;}
+.nav button.nxt{background:#7a3b1e;color:#fff;border-color:#7a3b1e;}
+.sbtns{display:flex;flex-direction:column;gap:10px;margin-top:16px;padding-bottom:40px;}
+.bs{border:none;border-radius:10px;padding:14px;font-weight:700;cursor:pointer;font-size:16px;font-family:inherit;}
+.bs.g{background:#2d7a2d;color:#fff;}.bs.b{background:linear-gradient(90deg,#7a3b1e,#b5541a);color:#fff;}
+.bs.w{background:#f0e6d4;color:#7a3b1e;border:1.5px solid #c8a97e;}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:10px;color:#fff;font-weight:600;font-size:14px;z-index:9999;display:none;white-space:nowrap;}
+.ldr{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:9998;}
+.lb{background:#fff;border-radius:14px;padding:30px 40px;text-align:center;font-size:16px;font-family:inherit;}
+@media(max-width:480px){.g2{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div><h1>💼 सावकारी कर्ज व्यवस्थापन</h1><p>Maharashtra Money Lending Act 2014</p></div>
+  <button class="bn" onclick="nF()">+ नवीन कर्ज</button>
+</div>
+<div class="toast" id="T"></div>
+<div class="ldr" id="L"><div class="lb"><div style="font-size:36px;margin-bottom:10px;">⏳</div>PDF तयार होत आहे...<br><small style="color:#888">कृपया थांबा</small></div></div>
+
+<div class="pg on" id="pL">
+  <button onclick="blankPDF()" style="width:100%;background:linear-gradient(90deg,#1a5276,#2471a3);color:#fff;border:none;border-radius:10px;padding:12px;font-weight:700;cursor:pointer;font-size:14px;font-family:inherit;margin-bottom:12px;">🖨️ रिकामा फॉर्म PDF (प्रिंटसाठी)</button>
+  <input class="sb" type="text" placeholder="🔍 नाव, मोबाईल किंवा दिनांक शोधा..." oninput="fil(this.value)"/>
+  <div id="rl"></div>
+</div>
+
+<div class="pg" id="pF">
+  <div class="fhdr"><button class="bk" onclick="gL()">←</button><div class="fttl" id="fT">नवीन कर्जदार माहिती भरा</div></div>
+  <div class="tabs">
+    <button class="tab on" onclick="tb(0)" id="t0">📝 कर्ज मागणी अर्ज</button>
+    <button class="tab" onclick="tb(1)" id="t1">✍️ वचनचिठ्ठी</button>
+    <button class="tab" onclick="tb(2)" id="t2">📋 Form No.8</button>
+    <button class="tab" onclick="tb(3)" id="t3">📜 करारनामा</button>
+  </div>
+  <div class="tc on" id="c0">
+    <div class="ptt">📝 कर्ज मागणी अर्ज</div>
+    <div class="sec"><div class="stt">📅 सामान्य माहिती</div>
+      <div class="g2">
+        <div class="fld"><label>दिनांक</label><input type="date" id="d_date"/></div>
+        <div class="fld"><label>लोन नंबर</label><input type="text" id="d_lno"/></div>
+      </div>
+    </div>
+    <div class="sec"><div class="stt">👤 अर्जदाराची माहिती</div>
+      <div class="fld"><label>अर्जदाराचे नाव *</label><input type="text" id="d_nm"/></div>
+      <div class="fld"><label>राहण्याचा पत्ता</label><textarea id="d_addr"></textarea></div>
+      <div class="g2">
+        <div class="fld"><label>जन्म तारीख</label><input type="date" id="d_dob"/></div>
+        <div class="fld"><label>अर्जदाराचे मोबाईल नंबर</label><input type="tel" id="d_mob"/></div>
+      </div>
+      <div class="fld"><label>व्यवसायाचा नाव पत्ता</label><input type="text" id="d_biz"/></div>
+      <div class="g2">
+        <div class="fld"><label>मासिक उत्पन्न</label><input type="text" id="d_inc"/></div>
+        <div class="fld"><label>कर्ज मागणी रक्कम (₹)</label><input type="text" id="d_amt"/></div>
+      </div>
+      <div class="g2">
+        <div class="fld"><label>कर्ज कालावधी</label><input type="text" id="d_dur"/></div>
+        <div class="fld"><label>कर्जाचे कारण</label><input type="text" id="d_pur"/></div>
+      </div>
+    </div>
+    <div class="sec"><div class="stt">📱 मोबाईल नंबर (१, २, ३)</div>
+      <div class="fld"><label>मोबाईल नंबर १</label><input type="text" id="d_g1" placeholder="नंबर १"/></div>
+      <div class="fld"><label>मोबाईल नंबर २</label><input type="text" id="d_g2" placeholder="नंबर २"/></div>
+      <div class="fld"><label>मोबाईल नंबर ३</label><input type="text" id="d_g3" placeholder="नंबर ३"/></div>
+    </div>
+    <div class="nav"><button class="nxt" onclick="tb(1)">पुढे → वचनचिठ्ठी</button></div>
+  </div>
+  <div class="tc" id="c1">
+    <div class="ptt">✍️ वचनचिठ्ठी</div>
+    <div class="sec"><div class="stt">🏦 सावकाराची माहिती</div>
+      <div class="fld"><label>व्यवसाय (उदा. नोकरी / शेती / व्यापार)</label><input type="text" id="d_vocation" placeholder="उदा. नोकरी"/></div>
+      <div class="fld"><label>सावकाराचे नाव</label><input type="text" id="d_sn"/></div>
+      <div class="fld"><label>सावकाराचा पत्ता</label><textarea id="d_sa"></textarea></div>
+      <div class="fld"><label>परवानाधारक क्रमांक</label><input type="text" id="d_sl"/></div>
+    </div>
+    <div class="sec"><div class="stt">💰 कर्ज तपशील</div>
+      <div class="g2">
+        <div class="fld"><label>कर्ज तारीख</label><input type="date" id="d_ld"/></div>
+        <div class="fld"><label>रक्कम (₹)</label><input type="text" id="d_a2"/></div>
+      </div>
+      <div class="fld"><label>अक्षरी रक्कम</label><input type="text" id="d_aw"/></div>
+      <div class="fld"><label>मुदत</label><input type="text" id="d_d2"/></div>
+    </div>
+    <div class="nav"><button onclick="tb(0)">← मागे</button><button class="nxt" onclick="tb(2)">पुढे → Form No.8</button></div>
+  </div>
+  <div class="tc" id="c2">
+    <div class="ptt">📋 कर्जाचा तपशील व अटी — Form No. 8</div>
+    <div class="sec"><div class="stt">गहाण व कागदपत्रे</div>
+      <div class="fld"><label>गहाण ठेवलेली वस्तू</label><input type="text" id="d_col"/></div>
+      <div class="fld"><label>ताब्यात घेतलेले कागदपत्रे</label><input type="text" id="d_doc"/></div>
+    </div>
+    <div class="nav"><button onclick="tb(1)">← मागे</button><button class="nxt" onclick="tb(3)">पुढे → करारनामा</button></div>
+  </div>
+  <div class="tc" id="c3">
+    <div class="ptt">📜 कर्ज करारनामा</div>
+    <div class="sec"><div class="stt">ओळखपत्र, साक्षीदार व ठिकाण</div>
+      <div class="fld"><label>ओळखपत्र (आधार / पॅन / मतदान इ.)</label><input type="text" id="d_id"/></div>
+      <div class="fld"><label>साक्षीदार १ नाव व सही</label><input type="text" id="d_w1"/></div>
+      <div class="fld"><label>साक्षीदार २ नाव व सही</label><input type="text" id="d_w2"/></div>
+      <div class="fld"><label>ठिकाण</label><input type="text" id="d_pl"/></div>
+    </div>
+    <div class="nav"><button onclick="tb(2)">← मागे</button></div>
+    <div class="sbtns">
+      <button class="bs b" onclick="sR()">💾 जतन करा</button>
+      <button class="bs g" onclick="sPDF()">📄 जतन करा + PDF बनवा</button>
+      <button class="bs w" onclick="gL()">रद्द करा</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+var SK='sv5',RS=[],EID=null,SQ='';
+try{RS=JSON.parse(localStorage.getItem(SK)||'[]');}catch(e){}
+function sv(){localStorage.setItem(SK,JSON.stringify(RS));}
+window.onload=function(){
+  document.getElementById('pL').classList.add('on');
+  document.getElementById('pF').classList.remove('on');
+  rnd();
+};
+function tst(m,ok){var t=document.getElementById('T');t.textContent=m;t.style.background=ok===false?'#c00':'#2d7a2d';t.style.display='block';setTimeout(function(){t.style.display='none';},3000);}
+function ldr(on){document.getElementById('L').style.display=on?'flex':'none';}
+function gL(){document.getElementById('pL').classList.add('on');document.getElementById('pF').classList.remove('on');rnd();}
+function sF(){document.getElementById('pL').classList.remove('on');document.getElementById('pF').classList.add('on');tb(0);window.scrollTo(0,0);}
+function nF(){EID=null;clr();document.getElementById('fT').textContent='नवीन कर्जदार माहिती भरा';sF();}
+function eF(id){EID=id;var r=RS.find(function(x){return x.id===id;});if(!r)return;fi2(r);document.getElementById('fT').textContent='कर्जदार माहिती संपादित करा';sF();}
+function tb(n){for(var i=0;i<4;i++){document.getElementById('t'+i).classList.toggle('on',i===n);document.getElementById('c'+i).classList.toggle('on',i===n);}window.scrollTo(0,0);}
+var KS=['date','lno','nm','addr','dob','mob','biz','inc','amt','dur','pur','g1','g2','g3','sn','sa','sl','ld','a2','aw','d2','col','doc','id','w1','w2','pl','vocation'];
+function clr(){KS.forEach(function(k){var e=document.getElementById('d_'+k);if(e)e.value='';});}
+function fi2(r){KS.forEach(function(k){var e=document.getElementById('d_'+k);if(e)e.value=r[k]||'';});}
+function gD(){var d={};KS.forEach(function(k){var e=document.getElementById('d_'+k);if(e)d[k]=e.value||'';});d.amt=d.amt||d.a2;d.dur=d.dur||d.d2;return d;}
+function doS(d){if(EID){RS=RS.map(function(r){return r.id===EID?Object.assign({},d,{id:EID}):r;});}else{RS=[Object.assign({},d,{id:Date.now().toString()})].concat(RS);}sv();}
+function sR(){var d=gD();if(!d.nm){tst('अर्जदाराचे नाव आवश्यक आहे',false);tb(0);return;}doS(d);tst(EID?'अपडेट झाला ✓':'जोडला ✓');gL();}
+async function sPDF(){var d=gD();if(!d.nm){tst('अर्जदाराचे नाव आवश्यक आहे',false);tb(0);return;}doS(d);tst('जतन झाला ✓');gL();await mkP(d);}
+function dR(id){if(!confirm('हा रेकॉर्ड कायमचा डिलीट करायचा आहे?'))return;RS=RS.filter(function(r){return r.id!==id;});sv();tst('डिलीट झाला');rnd();}
+function fil(q){SQ=q;rnd();}
+function rnd(){
+  var el=document.getElementById('rl');
+  var fl=RS.filter(function(r){return(r.nm||'').toLowerCase().indexOf(SQ.toLowerCase())>-1||(r.mob||'').indexOf(SQ)>-1||(r.date||'').indexOf(SQ)>-1;});
+  if(!fl.length){el.innerHTML='<div class="emp">📋<br><br>'+(RS.length?'सापडले नाही':'अजून रेकॉर्ड नाही.<br>+ नवीन कर्ज वर क्लिक करा.')+'</div>';return;}
+  el.innerHTML=fl.map(function(r){return '<div class="card"><div class="cn">👤 '+(r.nm||'—')+'</div><div class="cm">'+(r.mob?'<span>📱 '+r.mob+'</span>':'')+(r.amt?'<span>💰 ₹'+r.amt+'</span>':'')+(r.date?'<span>📅 '+r.date+'</span>':'')+(r.dur?'<span>⏱ '+r.dur+'</span>':'')+'</div><div class="cbs"><button class="cb" style="background:#e8f4ff;color:#1a6bb5;border-color:#1a6bb5" onclick="eF(\''+r.id+'\')">✏️ Edit</button><button class="cb" style="background:#e8f8e8;color:#2d7a2d;border-color:#2d7a2d" onclick="pBI(\''+r.id+'\')">📄 PDF</button><button class="cb" style="background:#f3e8ff;color:#6a0dad;border-color:#6a0dad" onclick="dataPBI(\''+r.id+'\')">📋 माहिती PDF</button><button class="cb" style="background:#e8f8ee;color:#128c7e;border-color:#128c7e" onclick="wBI(\''+r.id+'\')">💬 WhatsApp</button><button class="cb" style="background:#fff3e0;color:#c46200;border-color:#c46200" onclick="emBI(\''+r.id+'\')">📧 Email</button><button class="cb" style="background:#fff0ee;color:#cc2200;border-color:#cc2200" onclick="dR(\''+r.id+'\')">🗑 Delete</button></div></div>';}).join('');
+}
+
+// Date format: YYYY-MM-DD → DD-MM-YYYY
+function fd(dt){
+  if(!dt)return'';
+  var p=dt.split('-');
+  if(p.length===3)return p[2]+'-'+p[1]+'-'+p[0];
+  return dt;
+}
+
+
+// ====== UNIFIED PDF RENDERER ======
+// m=false → full form (labels + lines + data)
+// m=true  → data-only overlay (labels invisible, lines transparent, data visible)
+// visibility:hidden keeps layout IDENTICAL - guarantees pixel-perfect match
+var S='width:794px;height:1123px;background:#fff;padding:50px 55px 40px 55px;font-family:\'Noto Sans Devanagari\',sans-serif;font-size:13px;line-height:1.8;color:#000;position:fixed;top:-9999px;left:-9999px;box-sizing:border-box;overflow:hidden;';
+function ul(w){return 'border-bottom:1px solid #000;display:inline-block;min-width:'+w+'px;vertical-align:bottom;padding-left:3px;';}
+function lbl(t,m){return '<span style="'+(m?'visibility:hidden;':'')+'">'+ t +'</span>';}
+function uld(w,m){return (m?'border-bottom:1px solid transparent':'border-bottom:1px solid #000')+';display:inline-block;min-width:'+w+'px;vertical-align:bottom;padding-left:3px;';}
+function bdr(m){return m?'transparent':'#000';}
+function iv(m){return m?'visibility:hidden;':'';}
+
+// पान १ - कर्ज मागणी अर्ज
+function P1(d,m){
+  var A=d.amt||d.a2||'';
+  return '<div style="'+S+'">'+
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">'+
+      '<div style="font-size:13px;">'+lbl('दिनांक :- ',m)+'<span style="'+uld(150,m)+'">'+fd(d.date)+'</span></div>'+
+      '<div style="border:1.5px solid '+bdr(m)+';width:90px;height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;text-align:center;flex-shrink:0;">'+
+        '<div style="'+iv(m)+'">अर्जदाराचा</div><div style="'+iv(m)+'">फोटो</div>'+
+      '</div>'+
+    '</div>'+
+    '<div style="text-align:center;font-size:18px;font-weight:bold;text-decoration:underline;margin:0 0 16px;'+iv(m)+'">कर्ज मागणी अर्ज</div>'+
+    '<div style="margin-bottom:3px;'+iv(m)+'">प्रति,</div>'+
+    '<div style="margin-bottom:3px;">'+lbl('माननीय श्री. ',m)+'<span style="'+uld(380,m)+'">'+(d.sn||'')+'</span></div>'+
+    '<div style="margin-bottom:12px;">&nbsp;</div>'+
+    '<div style="margin-bottom:3px;'+iv(m)+'">मी खाली सही करणारा/करणारी,</div>'+
+    '<div style="margin-bottom:12px;line-height:1.9;'+iv(m)+'">आपणाकडे मी विनंतीपूर्वक अर्ज करतो / करते &nbsp; की मला खालील दिलेल्या माहितीनुसार कर्ज घ्याचे असून<br>कृपया माझ्या अर्जाचा विचार करावा.</div>'+
+    '<table style="width:100%;border-collapse:collapse;font-size:13px;">'+
+      '<tr><td style="padding:4px 0;width:210px;font-weight:bold;'+iv(m)+'">अर्जदाराचे नाव :</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.nm||'')+'</td></tr>'+
+      '<tr><td style="padding:4px 0;font-weight:bold;'+iv(m)+'">राहण्याचा पत्ता :</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.addr||'')+'</td></tr>'+
+      '<tr><td style="padding:4px 0;"></td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;</td></tr>'+
+      '<tr><td style="padding:4px 0;font-weight:bold;'+iv(m)+'">जन्म तारीख :</td>'+
+        '<td style="padding:4px 0;">'+
+          '<span style="'+uld(155,m)+'">'+fd(d.dob)+'</span>'+
+          '&nbsp;&nbsp;'+lbl('<b>मोबाईल नंबर :</b>&nbsp;',m)+
+          '<span style="border:1px solid '+bdr(m)+';display:inline-block;padding:1px 6px;min-width:130px;vertical-align:bottom;">'+lbl('1) ',m)+(d.mob||d.g1||'')+'</span>'+
+        '</td>'+
+      '</tr>'+
+      '<tr><td></td><td style="padding:2px 0;">'+
+        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<span style="border:1px solid '+bdr(m)+';display:inline-block;padding:1px 6px;min-width:130px;">'+lbl('2) ',m)+(d.g2||'')+'</span>'+
+      '</td></tr>'+
+      '<tr><td style="padding:4px 0;font-weight:bold;'+iv(m)+'">कर्ज मागणी रक्कम :</td>'+
+        '<td style="padding:4px 0;">'+
+          '<span style="'+uld(155,m)+'">'+(A||'')+'</span>'+
+          '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+          '<span style="border:1px solid '+bdr(m)+';display:inline-block;padding:1px 6px;min-width:130px;">'+lbl('3) ',m)+(d.g3||'')+'</span>'+
+        '</td>'+
+      '</tr>'+
+      '<tr><td style="padding:4px 0;font-weight:bold;'+iv(m)+'">व्यवसायाचा नाव पत्ता :</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.biz||'')+'</td></tr>'+
+      '<tr><td style="padding:4px 0;font-weight:bold;'+iv(m)+'">मासिक उत्पन्न :</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.inc||'')+'</td></tr>'+
+      '<tr><td style="padding:4px 0;font-weight:bold;'+iv(m)+'">कर्ज कालावधी :</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.dur||'')+'</td></tr>'+
+      '<tr><td style="padding:4px 0;font-weight:bold;'+iv(m)+'">कर्जाचे कारण:</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.pur||'')+'</td></tr>'+
+    '</table>'+
+    '<div style="margin-top:14px;font-weight:bold;line-height:1.9;'+iv(m)+'">मी वरील सर्व माहिती खरी असल्याची हमी देतो/देते. मला माहित आहे की चुकीची माहिती दिल्यास<br>किंवा कर्जाची परतफेड न केल्यास कायदेशीर कारवाई केली जाऊ शकते.</div>'+
+    '<div style="margin-top:16px;font-weight:bold;">'+lbl('अर्जदाराचे नाव : ',m)+'<span style="border-bottom:1px solid '+bdr(m)+';display:inline-block;min-width:300px;">&nbsp;'+(d.nm||'')+'</span></div>'+
+    '<div style="margin-top:12px;font-weight:bold;">'+lbl('सही : &nbsp;',m)+'<span style="border-bottom:1px solid '+bdr(m)+';display:inline-block;min-width:250px;">&nbsp;</span></div>'+
+  '</div>';
+}
+
+// पान २ - वचनचिठ्ठी
+function P2(d,m){
+  var A=d.amt||d.a2||'';
+  var AW=d.aw||'';
+  var DU=d.dur||d.d2||'';
+  var LD=d.ld||d.date||'';
+  return '<div style="'+S+'">'+
+    '<div style="margin-bottom:8px;font-size:13px;">'+lbl('दिनांक : ',m)+'<span style="'+uld(140,m)+'">'+fd(d.date)+'</span></div>'+
+    '<div style="text-align:center;margin-bottom:18px;">'+
+      '<span style="border:1.5px solid '+bdr(m)+';padding:6px 30px;font-size:17px;font-weight:bold;display:inline-block;">'+lbl('वचनचिठ्ठी',m)+'</span>'+
+    '</div>'+
+    '<div style="display:inline-block;border:1.5px solid '+bdr(m)+';padding:6px 16px;font-size:14px;font-weight:bold;margin-bottom:14px;">'+
+      lbl('रु. ',m)+'<span style="'+uld(120,m)+'">'+(A||'')+'</span>'+
+    '</div>'+
+    '<div style="margin-bottom:10px;'+iv(m)+'">मी &nbsp;खाली स्वाक्षरी करणार</div>'+
+    '<table style="width:100%;border-collapse:collapse;margin-bottom:10px;">'+
+      '<tr><td style="padding:4px 0;width:70px;font-weight:bold;'+iv(m)+'">नाव:</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.nm||'')+'</td></tr>'+
+      '<tr><td style="padding:4px 0;font-weight:bold;'+iv(m)+'">पत्ता:</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.addr||'')+'</td></tr>'+
+      '<tr><td style="padding:4px 0;"></td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;</td></tr>'+
+      '<tr><td style="padding:4px 0;font-weight:bold;'+iv(m)+'">वय :</td><td style="padding:4px 0;">'+
+        '<span style="'+uld(175,m)+'">'+fd(d.dob)+'</span>'+
+        '&nbsp;&nbsp;&nbsp;'+lbl('<b>व्यवसाय :</b> ',m)+'<span style="'+uld(175,m)+'">'+(d.vocation||'')+'</span>'+
+      '</td></tr>'+
+    '</table>'+
+    '<div style="margin-bottom:8px;font-weight:bold;'+iv(m)+'">श्री / सौं &nbsp;( सावकार )</div>'+
+    '<table style="width:100%;border-collapse:collapse;margin-bottom:14px;">'+
+      '<tr><td style="padding:4px 0;width:70px;font-weight:bold;'+iv(m)+'">नाव :</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.sn||'')+'</td></tr>'+
+      '<tr><td style="padding:4px 0;font-weight:bold;'+iv(m)+'">पत्ता :</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.sa||'')+'</td></tr>'+
+      '<tr><td></td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;</td></tr>'+
+    '</table>'+
+    '<div style="margin-bottom:8px;">'+lbl('यांचेकडून रुपये &nbsp;<b>रक्कम रुपये :</b> ',m)+'<span style="'+uld(240,m)+'">'+(A||'')+'</span></div>'+
+    '<div style="margin-bottom:8px;display:flex;align-items:baseline;gap:4px;">'+
+      lbl('<span>( अक्षरी रुपये -</span>',m)+
+      '<span style="'+uld(400,m)+'">'+(AW||'')+'</span>'+
+      lbl('<span> )</span>',m)+
+    '</div>'+
+    '<div style="line-height:1.95;margin-bottom:20px;">'+
+      lbl('इतकी रक्कम &nbsp;&nbsp;दिनांक ',m)+'<span style="'+uld(115,m)+'">'+fd(LD)+'</span>'+lbl('रोजी कर्ज म्हणून घेतलेली आहे. मी ही रक्कम वार्षिक <b>१५%</b> व्याज दराने<br>',m)+
+      '<span style="'+uld(115,m)+'">'+(DU||'')+'</span>'+lbl(' मुदती करीता घेतलेली आहे. &nbsp;मी यांस वचन देतो की सदर कर्ज मी मुदतीत किंवा यांनी मागणी करताच<br>परतफेड केली जाईल असे व्यक्तिशः वचन देतो. वरील रकमेची परतफेड करण्याची जबाबदारी माझी स्वतःची असून, <br>वेळेत न भरल्यास सावकाराला कायदेशीर मार्गाने वसुली करण्याचा पूर्ण अधिकार राहील, हे मी मान्य करतो.',m)+
+    '</div>'+
+    '<div style="margin-bottom:6px;font-weight:bold;'+iv(m)+'">कर्जदार</div>'+
+    '<div style="margin-bottom:14px;">'+lbl('नाव : ',m)+'<span style="'+uld(300,m)+'">'+(d.nm||'')+'</span></div>'+
+    '<div style="margin-top:8px;">'+lbl('सही : ',m)+'<span style="border-bottom:1px solid '+bdr(m)+';display:inline-block;min-width:200px;">&nbsp;</span></div>'+
+  '</div>';
+}
+
+// पान ३ - Form No. 8
+function P3(d,m){
+  var A=d.amt||d.a2||'';
+  var DU=d.dur||d.d2||'';
+  var LD=d.ld||d.date||'';
+  return '<div style="'+S+'">'+
+    '<div style="text-align:center;font-weight:bold;margin-bottom:4px;font-size:13px;'+iv(m)+'">महाराष्ट्र सावकारी कायदा – २०१४</div>'+
+    '<div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:12px;">'+
+      '<span>'+lbl('अ. नं. ',m)+'<span style="'+uld(90,m)+'">'+(d.lno||'')+'</span></span>'+
+      '<span style="'+iv(m)+'">Bombay Money-Lender Rules, 1959 [18(2)]</span>'+
+    '</div>'+
+    '<div style="text-align:center;font-weight:bold;font-size:13px;margin-bottom:2px;'+iv(m)+'">FORM NO. 8 (RULE 16)</div>'+
+    '<div style="text-align:center;font-size:11px;margin-bottom:4px;'+iv(m)+'">(Statements showing the details of the conditions of the loan)</div>'+
+    '<div style="text-align:center;font-size:16px;font-weight:bold;text-decoration:underline;margin-bottom:10px;'+iv(m)+'">कर्जाचा तपशील व अटी</div>'+
+    '<div style="display:flex;justify-content:space-between;margin-bottom:10px;">'+
+      '<span>'+lbl('<span style="font-weight:bold;">लोन नं. </span>',m)+'<span style="'+uld(100,m)+'">'+(d.lno||'')+'</span></span>'+
+      '<span>'+lbl('दिनांक : ',m)+'<span style="'+uld(155,m)+'">'+fd(d.date)+'</span></span>'+
+    '</div>'+
+    '<table style="width:100%;border-collapse:collapse;margin-bottom:8px;">'+
+      '<tr><td style="padding:4px 0;width:220px;font-weight:bold;'+iv(m)+'">कर्ज घेणाऱ्याचे नाव :-</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.nm||'')+'</td></tr>'+
+      '<tr><td style="padding:4px 0;font-weight:bold;'+iv(m)+'">पत्ता :-</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.addr||'')+'</td></tr>'+
+      '<tr><td></td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;</td></tr>'+
+    '</table>'+
+    '<table style="width:100%;border-collapse:collapse;margin-bottom:8px;">'+
+      '<tr><td style="padding:4px 0;width:220px;font-weight:bold;'+iv(m)+'">व्यवसाय :-</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.vocation||'')+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+lbl('<b>मोब. नं.</b> ',m)+(d.mob||'')+'</td></tr>'+
+    '</table>'+
+    '<table style="width:100%;border-collapse:collapse;margin-bottom:12px;">'+
+      '<tr><td style="padding:5px 0;width:220px;font-weight:bold;'+iv(m)+'">१) कर्जाची रक्कम :-</td><td style="padding:5px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(A||'')+'</td></tr>'+
+      '<tr><td style="padding:5px 0;font-weight:bold;'+iv(m)+'">२) कर्जाची तारीख :-</td><td style="padding:5px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+fd(LD)+'</td></tr>'+
+      '<tr><td style="padding:5px 0;font-weight:bold;'+iv(m)+'">३) कर्जाची मुदत :-</td><td style="padding:5px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(DU||'')+'</td></tr>'+
+      '<tr><td style="padding:5px 0;font-weight:bold;'+iv(m)+'">४) व्याजदर (वार्षिक) :-</td><td style="padding:5px 0;"><span style="'+iv(m)+'"><b>१५% ( द. सा. द. शे )</b></span></td></tr>'+
+      '<tr><td style="padding:5px 0;font-weight:bold;'+iv(m)+'">५) गहाण ठेवलेली वस्तू:-</td><td style="padding:5px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.col||'')+'</td></tr>'+
+      '<tr><td></td><td style="padding:5px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;</td></tr>'+
+      '<tr><td style="padding:5px 0;font-weight:bold;'+iv(m)+'">६) ताब्यात घेतलेले कागदपत्रे :-</td><td style="padding:5px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.doc||'')+'</td></tr>'+
+      '<tr><td></td><td style="padding:5px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;</td></tr>'+
+    '</table>'+
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:10px;">'+
+      '<div style="border:1.5px solid '+bdr(m)+';padding:10px 14px;width:52%;min-height:100px;">'+
+        '<div style="font-weight:bold;text-decoration:underline;margin-bottom:8px;text-align:center;'+iv(m)+'">सावकाराचे नाव आणि पत्ता :</div>'+
+        '<div style="border-bottom:1px solid '+bdr(m)+';margin-bottom:8px;min-height:20px;">&nbsp;'+(d.sn||'')+'</div>'+
+        '<div style="border-bottom:1px solid '+bdr(m)+';margin-bottom:8px;min-height:20px;">&nbsp;'+(d.sa||'')+'</div>'+
+        '<div style="border-bottom:1px solid '+bdr(m)+';min-height:20px;">&nbsp;</div>'+
+      '</div>'+
+      '<div style="text-align:center;min-width:180px;">'+
+        '<div style="margin-bottom:50px;">&nbsp;</div>'+
+        '<div style="font-weight:bold;margin-bottom:8px;'+iv(m)+'">सावकाराची सही</div>'+
+        '<div style="border-bottom:1px solid '+bdr(m)+';width:170px;margin:0 auto;"></div>'+
+      '</div>'+
+    '</div>'+
+    '<div style="margin-top:24px;display:flex;justify-content:flex-end;align-items:flex-end;">'+
+      '<div style="text-align:center;margin-right:60px;">'+
+        '<div style="border-bottom:1px solid '+bdr(m)+';width:140px;margin:0 auto 4px;"></div>'+
+        '<div style="font-weight:bold;'+iv(m)+'">कर्जदाराची सही</div>'+
+      '</div>'+
+      '<div style="text-align:center;">'+
+        '<div style="border-bottom:1px solid '+bdr(m)+';width:100px;margin:0 auto 4px;"></div>'+
+        '<div style="font-weight:bold;'+iv(m)+'">( अंगठा )</div>'+
+      '</div>'+
+    '</div>'+
+    '<div style="margin-top:16px;font-weight:bold;font-size:12px;'+iv(m)+'">फॉर्म नं. ८ ची कर्ज पत्रकाची प्रत मिळाली</div>'+
+  '</div>';
+}
+
+// पान ४ - कर्ज करारनामा
+function P4(d,m){
+  var A=d.amt||d.a2||'';
+  var AW=d.aw||'';
+  var DU=d.dur||d.d2||'';
+  var LD=d.ld||d.date||'';
+  return '<div style="'+S+'">'+
+    '<div style="text-align:center;font-size:17px;font-weight:bold;text-decoration:underline;margin-bottom:14px;'+iv(m)+'">कर्ज करारनामा</div>'+
+    '<div style="margin-bottom:14px;">'+lbl('हा करार आज दिनांक ',m)+'<span style="'+uld(195,m)+'">'+fd(d.date)+'</span>'+lbl(' रोजी खालील पक्षांमध्ये करण्यात येत आहे.',m)+'</div>'+
+    '<div style="font-weight:bold;font-size:14px;margin-bottom:6px;'+iv(m)+'">सावकाराची माहिती :</div>'+
+    '<table style="width:100%;border-collapse:collapse;margin-bottom:12px;">'+
+      '<tr><td style="padding:4px 0;width:185px;'+iv(m)+'">नाव :</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.sn||'')+'</td></tr>'+
+      '<tr><td style="padding:4px 0;'+iv(m)+'">पत्ता :</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.sa||'')+'</td></tr>'+
+      '<tr><td></td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;</td></tr>'+
+      '<tr><td style="padding:4px 0;'+iv(m)+'">परवानाधारक क्रमांक :</td><td style="padding:4px 0;"><span style="'+uld(140,m)+'">'+(d.sl||'')+'</span></td></tr>'+
+    '</table>'+
+    '<div style="font-weight:bold;font-size:14px;margin-bottom:6px;'+iv(m)+'">&nbsp;कर्जदाराची माहिती :</div>'+
+    '<table style="width:100%;border-collapse:collapse;margin-bottom:12px;">'+
+      '<tr><td style="padding:4px 0;width:185px;'+iv(m)+'">नाव :</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.nm||'')+'</td></tr>'+
+      '<tr><td style="padding:4px 0;'+iv(m)+'">पत्ता :</td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;'+(d.addr||'')+'</td></tr>'+
+      '<tr><td></td><td style="padding:4px 0;border-bottom:1px solid '+bdr(m)+'">&nbsp;</td></tr>'+
+      '<tr><td colspan="2" style="padding:4px 0;">'+lbl('ओळखपत्र (आधार / पॅन / मतदान ओळखपत्र इ.) : ',m)+'<span style="'+uld(250,m)+'">'+(d.id||'')+'</span></td></tr>'+
+    '</table>'+
+    '<div style="font-weight:bold;font-size:14px;text-decoration:underline;margin-bottom:8px;'+iv(m)+'">कराराच्या अटी :</div>'+
+    '<div style="font-size:12.5px;line-height:1.88;">'+
+      '<div style="margin-bottom:5px;">'+lbl('१) &nbsp;सावकाराने कर्जदारास रु. ',m)+'<span style="'+uld(90,m)+'">'+(A||'')+'</span>'+lbl(' (अक्षरी : ',m)+'<span style="'+uld(180,m)+'">'+(AW||'')+'</span>'+lbl(' रुपये<br>&nbsp;&nbsp;&nbsp;&nbsp;फक्त) इतकी रक्कम दिनांक ',m)+'<span style="'+uld(80,m)+'">'+fd(LD)+'</span>'+lbl(' रोजी रोख / चेक / बँक ट्रान्स्फर द्वारा दिली आहे.',m)+'</div>'+
+      '<div style="margin-bottom:5px;">'+lbl('२) &nbsp;&nbsp;कर्जदाराने वरील रक्कम ',m)+'<span style="'+uld(170,m)+'">'+(DU||'')+'</span>'+lbl(' आत परतफेड करण्याचे मान्य केले आहे.',m)+'</div>'+
+      '<div style="margin-bottom:5px;'+iv(m)+'">३) &nbsp;&nbsp;कर्जदाराने सावकारास वरील रकमेवर वार्षिक व्याजदर <b>१५% ( द. सा. द. शे )</b> &nbsp;भरणे मान्य केले आहे.</div>'+
+      '<div style="margin-bottom:5px;'+iv(m)+'">४) &nbsp;&nbsp;व्याज व मूळ रक्कम याची परतफेड कर्जदाराने हप्ता / एकरकमी पद्धतीने करावी.</div>'+
+      '<div style="margin-bottom:5px;">'+lbl('५) &nbsp;&nbsp;कर्जाच्या हमीसाठी कर्जदाराने खालीलप्रमाणे जामीन ठेवला आहे :<br>&nbsp;&nbsp;&nbsp;&nbsp;',m)+'<span style="border-bottom:1px solid '+bdr(m)+';display:inline-block;min-width:370px;">&nbsp;'+(d.col||'')+'</span>'+lbl('<br>&nbsp;&nbsp;&nbsp;&nbsp;',m)+'<span style="border-bottom:1px solid '+bdr(m)+';display:inline-block;min-width:370px;">&nbsp;</span>'+lbl(' (उदा. सोने, दागिने, मालमत्ता, जामीनदाराचे नाव इ.)',m)+'</div>'+
+      '<div style="margin-bottom:5px;'+iv(m)+'">६) &nbsp;&nbsp;कर्जदाराने प्रत्येक हप्त्याची / परतफेडीची पावती सावकाराकडून घेणे बंधनकारक आहे.</div>'+
+      '<div style="margin-bottom:5px;'+iv(m)+'">७) &nbsp;&nbsp;परतफेडीमध्ये उशीर झाल्यास सावकारास कायद्यानुसार परवानगी असलेला दंड व्याज वसूल करण्याचा अधिकार<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;राहील.</div>'+
+      '<div style="margin-bottom:5px;'+iv(m)+'">८) &nbsp;&nbsp;या करारातील सर्व अटी महाराष्ट्र मनी लेंडिंग (रेग्युलेशन) ऍक्ट २०१४ नुसार बंधनकारक असतील.</div>'+
+    '</div>'+
+    '<div style="font-weight:bold;font-size:14px;text-decoration:underline;margin:10px 0 8px;'+iv(m)+'">स्वाक्षऱ्या:</div>'+
+    '<table style="width:100%;border-collapse:collapse;font-size:13px;">'+
+      '<tr>'+
+        '<td style="padding:8px 0;width:50%;font-weight:bold;">'+lbl('कर्जदाराचे नाव. ',m)+'<span style="border-bottom:1px solid '+bdr(m)+';display:inline-block;min-width:120px;">&nbsp;'+(d.nm||'')+'</span></td>'+
+        '<td style="padding:8px 0;font-weight:bold;">'+lbl('सही. ',m)+'<span style="border-bottom:1px solid '+bdr(m)+';display:inline-block;min-width:155px;">&nbsp;</span></td>'+
+      '</tr>'+
+      '<tr>'+
+        '<td style="padding:8px 0;font-weight:bold;">'+lbl('सावकाराचे नाव. ',m)+'<span style="border-bottom:1px solid '+bdr(m)+';display:inline-block;min-width:115px;">&nbsp;'+(d.sn||'')+'</span></td>'+
+        '<td style="padding:8px 0;font-weight:bold;">'+lbl('सही. ',m)+'<span style="border-bottom:1px solid '+bdr(m)+';display:inline-block;min-width:155px;">&nbsp;</span></td>'+
+      '</tr>'+
+      '<tr><td colspan="2" style="padding:6px 0;font-weight:bold;">'+lbl('साक्षीदार : &nbsp;&nbsp;&nbsp;1) नाव व सही ',m)+'<span style="border-bottom:1px solid '+bdr(m)+';display:inline-block;min-width:310px;">&nbsp;'+(d.w1||'')+'</span></td></tr>'+
+      '<tr><td colspan="2" style="padding:6px 0;font-weight:bold;">'+lbl('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) नाव व सही ',m)+'<span style="border-bottom:1px solid '+bdr(m)+';display:inline-block;min-width:310px;">&nbsp;'+(d.w2||'')+'</span></td></tr>'+
+      '<tr>'+
+        '<td style="padding:8px 0;">'+lbl('दिनांक : ',m)+'<span style="border-bottom:1px solid '+bdr(m)+';display:inline-block;min-width:148px;">&nbsp;'+fd(d.date)+'</span></td>'+
+        '<td style="padding:8px 0;">'+lbl('ठिकाण : ',m)+'<span style="border-bottom:1px solid '+bdr(m)+';display:inline-block;min-width:148px;">&nbsp;'+(d.pl||'')+'</span></td>'+
+      '</tr>'+
+    '</table>'+
+  '</div>';
+}
+
+// Wrapper functions - PG = full form, DP = data-only overlay
+function PG1(d){return P1(d,false);}
+function PG2(d){return P2(d,false);}
+function PG3(d){return P3(d,false);}
+function PG4(d){return P4(d,false);}
+function DP1(d){return P1(d,true);}
+function DP2(d){return P2(d,true);}
+function DP3(d){return P3(d,true);}
+function DP4(d){return P4(d,true);}
+
+// Blank form PDF
+function blankPDF(){
+  var empty={date:'',lno:'',nm:'',addr:'',dob:'',mob:'',biz:'',inc:'',amt:'',dur:'',pur:'',g1:'',g2:'',g3:'',sn:'',sa:'',sl:'',ld:'',a2:'',aw:'',d2:'',col:'',doc:'',id:'',w1:'',w2:'',pl:'',vocation:''};
+  mkP(empty);
+}
+
+
+async function mkDataPDF(d){
+  ldr(true);
+  try{
+    var pgs=[DP1(d),DP2(d),DP3(d),DP4(d)];
+    var doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    for(var i=0;i<pgs.length;i++){
+      var w=document.createElement('div');w.innerHTML=pgs[i];
+      var p=w.firstChild;document.body.appendChild(p);
+      await new Promise(function(r){setTimeout(r,500);});
+      var c=await html2canvas(p,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#fff',width:794,height:1123,logging:false});
+      document.body.removeChild(p);
+      if(i>0)doc.addPage();
+      doc.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,210,297);
+    }
+    doc.save((d.nm?d.nm.replace(/\s+/g,'_'):'Karjdar')+'_mahiti.pdf');
+    tst('माहिती PDF डाउनलोड झाली ✓');
+  }catch(e){tst('PDF त्रुटी: '+e.message,false);}
+  ldr(false);
+}
+
+function dataPBI(id){
+  var r=RS.find(function(x){return x.id===id;});
+  if(r)mkDataPDF(r);
+}
+
+async function dataWBI(id){
+  var r=RS.find(function(x){return x.id===id;});if(!r)return;
+  ldr(true);
+  try{
+    var pgs=[DP1(r),DP2(r),DP3(r),DP4(r)];
+    var doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    for(var i=0;i<pgs.length;i++){
+      var w=document.createElement('div');w.innerHTML=pgs[i];
+      var p=w.firstChild;document.body.appendChild(p);
+      await new Promise(function(x){setTimeout(x,500);});
+      var c=await html2canvas(p,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#fff',width:794,height:1123,logging:false});
+      document.body.removeChild(p);
+      if(i>0)doc.addPage();
+      doc.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,210,297);
+    }
+    var blob=doc.output('blob');
+    var nm=(r.nm?r.nm.replace(/\s+/g,'_'):'Karjdar')+'_mahiti.pdf';
+    if(navigator.share){try{var f=new File([blob],nm,{type:'application/pdf'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'कर्ज माहिती'});tst('शेअर केले ✓');ldr(false);return;}}catch(e2){}}
+    var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=nm;a.click();
+    setTimeout(function(){window.open('https://wa.me/?text='+encodeURIComponent('कर्जदार: '+r.nm+' माहिती'),'_blank');},1000);
+    tst('माहिती PDF डाउनलोड. WhatsApp उघडत आहे...');
+  }catch(e){tst('त्रुटी: '+e.message,false);}
+  ldr(false);
+}
+
+async function mkP(d){
+  ldr(true);
+  try{
+    var pgs=[PG1(d),PG2(d),PG3(d),PG4(d)];
+    var doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    for(var i=0;i<pgs.length;i++){
+      var w=document.createElement('div');w.innerHTML=pgs[i];
+      var p=w.firstChild;document.body.appendChild(p);
+      await new Promise(function(r){setTimeout(r,500);});
+      var c=await html2canvas(p,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#fff',width:794,height:1123,logging:false});
+      document.body.removeChild(p);
+      if(i>0)doc.addPage();
+      doc.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,210,297);
+    }
+    doc.save((d.nm?d.nm.replace(/\s+/g,'_')+'_KarjForm':'Blank_KarjForm')+'.pdf');
+    tst('PDF डाउनलोड झाली ✓');
+  }catch(e){tst('PDF त्रुटी: '+e.message,false);}
+  ldr(false);
+}
+async function mkPR(r){
+  ldr(true);
+  try{
+    var pgs=[PG1(r),PG2(r),PG3(r),PG4(r)];
+    var doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    for(var i=0;i<pgs.length;i++){
+      var w=document.createElement('div');w.innerHTML=pgs[i];
+      var p=w.firstChild;document.body.appendChild(p);
+      await new Promise(function(x){setTimeout(x,500);});
+      var c=await html2canvas(p,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#fff',width:794,height:1123,logging:false});
+      document.body.removeChild(p);
+      if(i>0)doc.addPage();
+      doc.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,210,297);
+    }
+    ldr(false);return doc;
+  }catch(e){ldr(false);throw e;}
+}
+function pBI(id){var r=RS.find(function(x){return x.id===id;});if(r)mkP(r);}
+async function wBI(id){
+  var r=RS.find(function(x){return x.id===id;});if(!r)return;
+  try{
+    var doc=await mkPR(r);var blob=doc.output('blob');
+    var nm=(r.nm?r.nm.replace(/\s+/g,'_'):'Karjdar')+'_KarjForm.pdf';
+    if(navigator.share){try{var f=new File([blob],nm,{type:'application/pdf'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'कर्ज फॉर्म'});tst('शेअर केले ✓');return;}}catch(e2){}}
+    var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=nm;a.click();
+    setTimeout(function(){window.open('https://wa.me/?text='+encodeURIComponent('कर्जदार: '+r.nm),'_blank');},1000);
+    tst('PDF डाउनलोड. WhatsApp उघडत आहे...');
+  }catch(e){tst('त्रुटी: '+e.message,false);}
+}
+async function emBI(id){
+  var r=RS.find(function(x){return x.id===id;});if(!r)return;
+  try{
+    var doc=await mkPR(r);var blob=doc.output('blob');
+    var nm=(r.nm?r.nm.replace(/\s+/g,'_'):'Karjdar')+'_KarjForm.pdf';
+    var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=nm;a.click();
+    setTimeout(function(){window.location.href='mailto:?subject='+encodeURIComponent('कर्ज फॉर्म - '+r.nm)+'&body='+encodeURIComponent('कर्जदार '+r.nm+' कर्ज फॉर्म.');},1000);
+    tst('PDF डाउनलोड. Email उघडत आहे...');
+  }catch(e){tst('त्रुटी: '+e.message,false);}
+}
+</script>
+</body>
+</html>
